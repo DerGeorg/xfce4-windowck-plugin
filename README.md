@@ -1,5 +1,13 @@
 # xfce4-windowck-plugin
 
+## Whats new in this Fork?
+* In "*Only Maximized Windows*" Mode, the buttons disappear if a non maximized Window is getting in focus
+
+## Comming soon
+* New Icon Pack
+
+
+## Old Readme
 Xfce panel plugin which allows to put the maximized window title and windows buttons on the panel.
 
 Original plugin's features:
