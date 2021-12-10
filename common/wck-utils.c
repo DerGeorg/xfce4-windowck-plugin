@@ -199,12 +199,12 @@ static void track_controled_window (WckUtils *win)
     if (win->controlwindow != previous_control)
     //if(False)
         on_control_window_changed(win->controlwindow, previous_control, win->data);
-    //else //Wenn es keines gibt hier?
-     //   on_wck_state_changed(win->controlwindow, win->data);
+    else //Wenn es keines gibt hier?
+        on_wck_state_changed(win->controlwindow, win->data);
 
 
     //Wenn aktives != upper max window --> dann Knöpfe weg
-    if (win->activewindow != win->umaxwindow)
+    if (win->activewindow != win->umaxwindow && win->only_maximized)
         //on_wck_state_changed(win->controlwindow, win->data);
         on_control_window_changed (NULL, NULL, win->data);
     else{
