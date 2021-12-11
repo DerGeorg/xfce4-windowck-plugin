@@ -30,7 +30,6 @@ po/Makefile.in.in
 po/POTFILES
 stamp-*
 po/*.mo
-themes/**/*.png
 themes/**/*.xpm
 arch/*
 !arch/PKGBUILD
