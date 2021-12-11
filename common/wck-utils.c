@@ -73,10 +73,8 @@ static void track_changed_max_state (WnckWindow *window,
                                          WckUtils *win)
 {
     /* track the window max state only if it isn't the control window */
-    // Das aktuelle windows ist ungleich dem aktiven controll windows
     if (window != win->controlwindow)
     {
-        // Windows ist vorhanden und das windows ist nicht minimized dafür maximized
         if (window
             && !wnck_window_is_minimized(window)
             && wnck_window_is_maximized(window))
@@ -137,14 +135,12 @@ static void track_controled_window (WckUtils *win)
 
     previous_control = win->controlwindow;
 
-    // DA werden die werte gesetzt
     if (win->only_maximized)
     {
         previous_umax = win->umaxwindow;
         win->umaxwindow = get_upper_maximized(win);
         win->controlwindow = win->umaxwindow;
     }
-    //UNINTERESSANT
     else if (win->activewindow
             && (!win->activeworkspace
                 || wnck_window_is_in_viewport(win->activewindow, win->activeworkspace))
@@ -154,21 +150,17 @@ static void track_controled_window (WckUtils *win)
             win->controlwindow = win->activewindow;
     }
 
-    //KEIN upper MAXIMIZED WINDOW ODER es ist nicht gleich dem vorherigen
     if (!win->umaxwindow || (win->umaxwindow != previous_umax))
     {
         wck_signal_handler_disconnect (G_OBJECT(previous_umax), win->msh);
         wck_signal_handler_disconnect (G_OBJECT(previous_umax), win->mwh);
     }
 
-    //DA
     if (win->only_maximized)
     {
-        //uppermax vorhanden und ungleich dem vorherigen
         if (win->umaxwindow && (win->umaxwindow != previous_umax))
         {
             /* track the new upper maximized window state */
-            // Neues uppermax wird ausgewählt
             win->msh = g_signal_connect(G_OBJECT(win->umaxwindow),
                                            "state-changed",
                                            G_CALLBACK (on_umaxed_window_state_changed),
@@ -178,7 +170,6 @@ static void track_controled_window (WckUtils *win)
                                         G_CALLBACK (umax_window_workspace_changed),
                                         win);
         }
-        //UNinteressant
         else if (win->controlwindow == previous_control)
         {
             /* track previous upper maximized window state on desktop */
@@ -191,22 +182,18 @@ static void track_controled_window (WckUtils *win)
             }
         }
     }
-    //Wenn es kein gesteuertes window gibt
     if (!win->controlwindow)
         win->controlwindow = get_root_window(win->activescreen);
 
-    //Wenn es ein gesteuertes window gibt aber das nicht das vorherige ist
     if (win->controlwindow != previous_control)
-    //if(False)
         on_control_window_changed(win->controlwindow, previous_control, win->data);
-    else //Wenn es keines gibt hier?
+    else
         on_wck_state_changed(win->controlwindow, win->data);
 
 
-    //Wenn aktives != upper max window --> dann Knöpfe weg
+    //activewindow != upper max window --> hide buttons
     if (win->activewindow != win->umaxwindow && win->only_maximized)
-        //on_wck_state_changed(win->controlwindow, win->data);
-        on_control_window_changed (NULL, NULL, win->data);
+        on_control_window_changed (NULL, NULL, win->data); //Hide Buttons
     else{
         on_control_window_changed(win->controlwindow, previous_control, win->data);
     }
@@ -243,7 +230,6 @@ static void active_window_changed (WnckScreen *screen,
 
     win->activewindow = wnck_screen_get_active_window(screen);
 
-    // aktives ungleich vorherigem aktiven window
     if (win->activewindow != previous)
     {
         wck_signal_handler_disconnect (G_OBJECT(previous), win->ash);
@@ -251,7 +237,6 @@ static void active_window_changed (WnckScreen *screen,
         track_controled_window (win);
     }
 
-    //Active window vorhanden und es ist ungleich dem vorherigen und der Fenster Type ist nicht desktop
     if (win->activewindow
         && (win->activewindow != previous)
         && (wnck_window_get_window_type (win->activewindow) != WNCK_WINDOW_DESKTOP))
