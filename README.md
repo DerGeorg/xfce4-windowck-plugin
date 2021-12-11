@@ -1,16 +1,13 @@
 # xfce4-windowck-plugin
+Xfce panel plugin which allows to put the maximized window title and windows buttons on the panel.
 
 ## Whats new in this Fork?
 * In "*Only Maximized Windows*" Mode, the buttons disappear if a non maximized Window is getting in focus
 
-## Comming soon
+## Coming soon in this Fork
 * New Icon Pack
 
-
-## Old Readme
-Xfce panel plugin which allows to put the maximized window title and windows buttons on the panel.
-
-Original plugin's features:
+## Original plugin's features:
 
 * Show the title and buttons of the maximized window on the panel.
 * Allow window actions on buttons and title clicks (activate, (un)maximize, close).
@@ -31,10 +28,6 @@ See [this page](https://goodies.xfce.org/projects/panel-plugins/xfce4-windowck-p
 
 # Installation
 
-#### Arch Linux
-
-For Arch Linux users [AUR package](https://aur.archlinux.org/packages/xfce4-windowck-plugin/) is available
-
 #### Other Linux distributions
 
 * Install dependencies:
@@ -48,7 +41,3 @@ For Arch Linux users [AUR package](https://aur.archlinux.org/packages/xfce4-wind
   make
   sudo make install
   ```
-
-# How to report bugs?
-
-Bugs should be reported right to this [GitHub page](https://github.com/nikitabobko/xfce4-windowck-plugin-bobko-mod/issues)
