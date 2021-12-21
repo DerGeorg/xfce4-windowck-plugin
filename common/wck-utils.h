@@ -20,7 +20,7 @@
  */
 
 #ifndef WCK_UTILS_H_
-#define WCK_UTILS_H_
+#define WCK_UTILS_H_+
 
 #ifndef WNCK_I_KNOW_THIS_IS_UNSTABLE
 #define WNCK_I_KNOW_THIS_IS_UNSTABLE

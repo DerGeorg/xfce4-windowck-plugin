@@ -191,10 +191,64 @@ static void track_controled_window (WckUtils *win)
         on_wck_state_changed(win->controlwindow, win->data);
 
 
+    //Mein neues feature
+//    GList *window_l;
+//
+//
+//    for (window_l = wnck_screen_get_windows (win->activescreen); window_l != NULL; window_l = window_l->next)
+//    {
+//        WnckWindow *window = WNCK_WINDOW (window_l->data);
+//        char command[100], msg[100];
+//
+//        strcpy(command,"/usr/bin/notify-send MessageSubject");
+//        strcpy(msg," \"active ");
+//        strcat(msg, wnck_window_get_name (window));
+//        strcat(msg, window == win->activewindow ? " (active)" : "");
+//        strcat(command,msg);
+//
+//        system(command);
+//        g_print ("%s%s\n", wnck_window_get_name (window),
+//                 window == win->activewindow ? " (active)" : "");
+//    }
+
+//    system("/usr/bin/notify-send MessageSubject \"active window changed\"");
+
     //activewindow != upper max window --> hide buttons
-    if (win->activewindow != win->umaxwindow && win->only_maximized)
-        on_control_window_changed (NULL, NULL, win->data); //Hide Buttons
-    else{
+//    WnckScreen *screencontrol;
+//    WnckScreen *screenold;
+    int screencontrol;
+    int screenold;
+//    wnck_screen_force_update(win->activescreen);
+//    screencontrol = wnck_screen_get_number(win->activescreen);
+    screencontrol = wnck_screen_get_number(wnck_window_get_screen(win->activewindow));
+//    screencontrol = wnck_window_get_screen(win->activewindow);
+//    screencontrol = wnck_screen_get_default();
+    screenold = 0; //plugin screen
+
+    char command[100], msg[100];
+//
+        strcpy(command,"/usr/bin/notify-send MessageSubject");
+        strcpy(msg," \"number ");
+        char str[12];
+        sprintf(str, "%d", screencontrol);
+        char str2[12];
+        sprintf(str2, "%d", screenold);
+        strcat(msg, str);
+        strcat(msg, str2);
+        strcat(msg," \" ");
+        strcat(command,msg);
+
+        system(command);
+
+//    if (screencontrol != screenold){
+//        system("/usr/bin/notify-send MessageSubject \"not same screen\"");
+//    }else{
+//        system("/usr/bin/notify-send MessageSubject \"same screen\"");
+//    }
+
+    if (win->activewindow != win->umaxwindow && win->only_maximized || screencontrol != screenold) {
+        on_control_window_changed(NULL, NULL, win->data); //Hide Buttons
+    }else{
         on_control_window_changed(win->controlwindow, previous_control, win->data);
     }
 }
@@ -228,6 +282,7 @@ static void active_window_changed (WnckScreen *screen,
                                    WckUtils *win)
 {
 
+//    system("/usr/bin/notify-send MessageSubject \"active window changed\"");
     win->activewindow = wnck_screen_get_active_window(screen);
 
     if (win->activewindow != previous)
@@ -251,6 +306,7 @@ static void active_window_changed (WnckScreen *screen,
 // We ONLY need this for Compiz (Marco doesn't use viewports)
 static void on_viewports_changed (WnckScreen *screen, WckUtils *win)
 {
+    system("/usr/bin/notify-send MessageSubject \"viewport\"");
     reload_wnck (win, win->only_maximized, win->data);
 }
 
@@ -260,12 +316,21 @@ static void active_workspace_changed (WnckScreen *screen,
                                       WnckWorkspace *previous,
                                       WckUtils *win)
 {
+    system("/usr/bin/notify-send MessageSubject \"workspace changed\"");
     reload_wnck (win, win->only_maximized, win->data);
 }
 
 
 void toggle_maximize (WnckWindow *window)
 {
+    char command[100], msg[100];
+
+    strcpy(command,"/usr/bin/notify-send MessageSubject");
+    strcpy(msg,"\"Toogle max ");
+    strcat(msg, "etetests \"");
+    strcat(command,msg);
+
+    system(command);
     if (window && wnck_window_is_maximized(window))
         wnck_window_unmaximize(window);
     else

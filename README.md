@@ -11,7 +11,14 @@ Xfce panel plugin which allows to put the maximized window title and windows but
 ![close](https://user-images.githubusercontent.com/22521386/145676177-f3ff5868-b230-4710-a166-9c630d22ed78.png)
 ![unfocused](https://user-images.githubusercontent.com/22521386/145676179-f6d52120-8f28-4fd2-a76b-a6d174b63c58.png)
 
-
+## Whats up next?
+* Only show Windowck Buttons on right Screen, where the maximized window is located
+  * Notes:
+    * Check active screen
+    * Before hiding buttons, check if old active maximized window is on other screen
+      * If on other screen --> do not hide buttons
+      * If on same screen and maximized --> change buttons to new window
+      * If on same screen and not maximized --> leave old window control
 
 ## Original plugin's features:
 
