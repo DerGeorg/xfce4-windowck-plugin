@@ -28,6 +28,7 @@
  *
  * Easy popup msg:
  *      system("/usr/bin/notify-send MessageSubject \"msg\"");
+ *
  */
 
 #include "wck-utils.h"
