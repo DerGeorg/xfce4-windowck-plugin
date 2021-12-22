@@ -2,7 +2,8 @@
 Xfce panel plugin which allows to put the maximized window title and windows buttons on the panel.
 
 ## Whats new in this Fork?
-* In "*Only Maximized Windows*" Mode, the buttons disappear if a non maximized Window is getting in focus
+* In Plugin settings you can now configure a monitor number for every plugin instance
+  * So the plugin knows to which monitor it belongs and can now show in "*Only Maximized Windows*" only the maximized windows on the configured screen.
 * New Icon Pack![minimize](https://user-images.githubusercontent.com/22521386/145676169-79b267c9-b882-4eaf-81b7-ef4ee42efb13.png)
 ![minimize_focused_pressed](https://user-images.githubusercontent.com/22521386/145676170-13caf8f4-eef2-44ea-a409-80a6eb4675d0.png)
 ![maximize_focused_prelight](https://user-images.githubusercontent.com/22521386/145676173-c0a4e600-518c-4c76-876f-17a938c984ab.png)
@@ -10,15 +11,6 @@ Xfce panel plugin which allows to put the maximized window title and windows but
 ![close_focused_prelight](https://user-images.githubusercontent.com/22521386/145676175-38d0a02b-65ff-46b6-a2a6-c5e29e1555de.png)
 ![close](https://user-images.githubusercontent.com/22521386/145676177-f3ff5868-b230-4710-a166-9c630d22ed78.png)
 ![unfocused](https://user-images.githubusercontent.com/22521386/145676179-f6d52120-8f28-4fd2-a76b-a6d174b63c58.png)
-
-## Whats up next?
-* Only show Windowck Buttons on right Screen, where the maximized window is located
-  * Notes:
-    * Check active screen
-    * Before hiding buttons, check if old active maximized window is on other screen
-      * If on other screen --> do not hide buttons
-      * If on same screen and maximized --> change buttons to new window
-      * If on same screen and not maximized --> leave old window control
 
 ## Original plugin's features:
 
