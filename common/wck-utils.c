@@ -39,6 +39,8 @@ static void on_window_closed(WnckScreen *, WnckWindow *, WckUtils *);
 static void on_window_opened(WnckScreen *, WnckWindow *, WckUtils *);
 
 
+
+
 gboolean wck_signal_handler_disconnect (GObject *object, gulong handler)
 {
     if (object && handler > 0)
@@ -122,13 +124,117 @@ static WnckWindow *get_upper_maximized (WckUtils *win)
             || wnck_window_is_in_viewport(windows->data, win->activeworkspace))
             if (wnck_window_is_maximized(windows->data)
                 && !wnck_window_is_minimized(windows->data))
-        {
-                umaxedwindow = windows->data;
-        }
+            {
+                if(get_active_window_number() == 0)
+                    umaxedwindow = windows->data;
+            }
         windows = windows->next;
     }
     /* NULL if no maximized window found */
     return umaxedwindow;
+}
+
+//gint get_active_window_number_from_window(int plugin_monitor){
+//    GdkDisplay *display;
+//    GdkScreen *screen;
+//    GdkWindow *window;
+//    display = gdk_display_get_default();
+//    screen = gdk_display_get_default_screen(display);
+//    window = gdk_screen_get_active_window(screen);
+//
+//    GList *allwindows = gdk_screen_get_window_stack(screen);
+//
+//    while (allwindows && allwindows->data) {
+//
+//       gint monitor_screen_number = gdk_screen_get_n_monitors(screen);
+//        gint activeWindowAtMonitor = gdk_screen_get_monitor_at_window(screen, allwindows->data);
+//
+//        allwindows = allwindows->next;
+//
+//
+//        char command[100], msg[100];
+//
+//        strcpy(command,"/usr/bin/notify-send MessageSubject");
+//        strcpy(msg," \"number ");
+//        char str[12];
+//        sprintf(str, "%d", activeWindowAtMonitor);
+//        char str2[12];
+//        sprintf(str2, "%d", plugin_monitor);
+//        strcat(msg, str);
+//        strcat(msg, str2);
+//        strcat(msg," \" ");
+//        strcat(command,msg);
+//
+//        system(command);
+//
+//        return activeWindowAtMonitor;
+//    }
+//
+//}
+
+
+gint get_active_window_number(){
+    GdkDisplay *display;
+    GdkScreen *screen;
+    GdkWindow *window;
+    display = gdk_display_get_default();
+    screen = gdk_display_get_default_screen(display);
+    window = gdk_screen_get_active_window(screen);
+
+    gint monitor_screen_number = gdk_screen_get_n_monitors(screen);
+
+    gint activeWindowAtMonitor = gdk_screen_get_monitor_at_window(screen, window);
+
+
+//            char command[100], msg[100];
+//
+//        strcpy(command,"/usr/bin/notify-send MessageSubject");
+//        strcpy(msg," \"number ");
+//        char str[12];
+//        sprintf(str, "%d", activeWindowAtMonitor);
+//        char str2[12];
+//        sprintf(str2, "%d", monitor_screen_number);
+//        strcat(msg, str);
+//        strcat(msg, str2);
+//        strcat(msg," \" ");
+//        strcat(command,msg);
+//
+//        system(command);
+
+
+    return activeWindowAtMonitor;
+}
+
+gint get_monitor_from_xid(int plugin_monitor, int xid){
+    GdkDisplay *display;
+    GdkScreen *screen;
+    GdkWindow *window;
+    display = gdk_display_get_default();
+    screen = gdk_display_get_default_screen(display);
+    window = gdk_screen_get_active_window(screen);
+
+    gint monitor_screen_number = gdk_screen_get_n_monitors(screen);
+
+    gint activeWindowAtMonitor = gdk_screen_get_monitor_at_window(screen, window);
+
+
+//            char command[100], msg[100];
+//
+//        strcpy(command,"/usr/bin/notify-send MessageSubject");
+//        strcpy(msg," \"number ");
+//        char str[12];
+//        sprintf(str, "%d", activeWindowAtMonitor);
+//        char str2[12];
+//        sprintf(str2, "%d", monitor_screen_number);
+//        strcat(msg, str);
+//        strcat(msg, str2);
+//        strcat(msg," \" ");
+//        strcat(command,msg);
+//
+//        system(command);
+
+
+    return activeWindowAtMonitor;
 }
 
 
@@ -211,13 +317,16 @@ static void track_controled_window (WckUtils *win)
 //    monitor_number = gdk_display_get_n_monitors(display);
     monitor_screen_number = gdk_screen_get_n_monitors(screen);
 
-    GdkRectangle *rect;
+//    GdkRectangle *rect;
     gint activeWindowsAtMonitor = gdk_screen_get_monitor_at_window(screen, window);
 
-    gdk_screen_get_monitor_geometry(screen, activeWindowsAtMonitor, rect);
 
-    x = gdk_window_get_width(window);
-    y = gdk_window_get_height(window);
+    GList *window_stack = gdk_screen_get_window_stack(screen);
+//    g_list_foreach(window_stack, (GFunc)g_free, NULL);
+//    gdk_screen_get_monitor_geometry(screen, activeWindowsAtMonitor, rect);
+//
+//    x = gdk_window_get_width(window);
+//    y = gdk_window_get_height(window);
 
 //    if x < 0: x = 0
 //    if y < 0: y = 0
@@ -264,34 +373,50 @@ static void track_controled_window (WckUtils *win)
 //    screencontrol = wnck_screen_get_default();
 //    screenold = 0; //plugin screen
 //
-    char command[100], msg[100];
+//    char command[100], msg[100];
+//
+//        strcpy(command,"/usr/bin/notify-send MessageSubject");
+//        strcpy(msg," \"number ");
+//        char str[12];
+//        sprintf(str, "%d", activeWindowsAtMonitor);
+//        char str2[12];
+//        sprintf(str2, "%d", screenold);
+//        strcat(msg, str);
+//        strcat(msg, str2);
+//        strcat(msg," \" ");
+//        strcat(command,msg);
+//
+//        system(command);
 
-        strcpy(command,"/usr/bin/notify-send MessageSubject");
-        strcpy(msg," \"number ");
-        char str[12];
-        sprintf(str, "%d", activeWindowsAtMonitor);
-        char str2[12];
-        sprintf(str2, "%d", screenold);
-        strcat(msg, str);
-        strcat(msg, str2);
-        strcat(msg," \" ");
-        strcat(command,msg);
-
-        system(command);
-
-    if (activeWindowsAtMonitor != screenold){
-        system("/usr/bin/notify-send MessageSubject \"not same screen\"");
-    }else{
-        system("/usr/bin/notify-send MessageSubject \"same screen\"");
-    }
+//    if (activeWindowsAtMonitor != screenold){
+//        system("/usr/bin/notify-send MessageSubject \"not same screen\"");
+//    }else{
+//        system("/usr/bin/notify-send MessageSubject \"same screen\"");
+//    }
 
     if(activeWindowsAtMonitor == screenold) {
-        if (win->activewindow != win->umaxwindow && win->only_maximized) {
-            on_control_window_changed(NULL, NULL, win->data); //Hide Buttons
-        } else {
+//        if (win->activewindow != win->umaxwindow && win->only_maximized) {
+//            on_control_window_changed(NULL, NULL, win->data); //Hide Buttons
+//        } else {
+//        system("/usr/bin/notify-send MessageSubject \"same screen\"");
+//        previous_on_screen = win->controlwindow;
+//        previous_on_screen_data = win->data;
+//        previous_on_screen_prev = previous_control;
             on_control_window_changed(win->controlwindow, previous_control, win->data);
-        }
+//        }
     }
+//    else{
+//        if (win->activewindow != win->umaxwindow && win->only_maximized) {
+//            system("/usr/bin/notify-send MessageSubject \"not ss active not max\"");
+//            on_control_window_changed(NULL, NULL, win->data); //Hide Buttons
+//        } else {
+//            system("/usr/bin/notify-send MessageSubject \"not ss active max\"");
+//            on_control_window_changed(previous_on_screen, previous_on_screen, win->data); //Hide Buttons //TODO hier sollen die buttons disabled sein
+//            on_control_window_changed(previous_control, previous_control, win->data);
+//        }
+//        on_control_window_changed(NULL, NULL, win->data); //Hide Buttons
+//        on_control_window_changed(win->controlwindow, previous_control, win->data);
+//    }
 }
 
 
@@ -323,10 +448,11 @@ static void active_window_changed (WnckScreen *screen,
                                    WckUtils *win)
 {
 
+    gint activewindowmonitornumber = get_active_window_number();
 //    system("/usr/bin/notify-send MessageSubject \"active window changed\"");
     win->activewindow = wnck_screen_get_active_window(screen);
 
-    if (win->activewindow != previous)
+    if (win->activewindow != previous && activewindowmonitornumber == 0)
     {
         wck_signal_handler_disconnect (G_OBJECT(previous), win->ash);
 
@@ -335,7 +461,7 @@ static void active_window_changed (WnckScreen *screen,
 
     if (win->activewindow
         && (win->activewindow != previous)
-        && (wnck_window_get_window_type (win->activewindow) != WNCK_WINDOW_DESKTOP))
+        && (wnck_window_get_window_type (win->activewindow) != WNCK_WINDOW_DESKTOP) && activewindowmonitornumber == 0)
     {
         /* Start tracking the new active window */
         win->ash = g_signal_connect(G_OBJECT (win->activewindow), "state-changed", G_CALLBACK (track_changed_max_state), win);
