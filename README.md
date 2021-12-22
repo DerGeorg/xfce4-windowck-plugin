@@ -28,8 +28,8 @@ This code is derived from original 'Window Applets' from Andrej Belcijan.
 See http://gnome-look.org/content/show.php?content=103732 for infos.
 
 # Screenshots
-![maximized_not_active](https://user-images.githubusercontent.com/22521386/145676271-f5527156-7889-4bd9-9296-568db3f38e74.png)
-![maximized_active_window](https://user-images.githubusercontent.com/22521386/145676272-17925c9c-b84a-4a38-b484-35daa355b3d3.png)
+![maximized_not_active](https://user-images.githubusercontent.com/22521386/147162629-86ee5335-a101-43ba-8c3c-a2de675119c0.png)
+![maximized_active_window](https://user-images.githubusercontent.com/22521386/147162663-5dd8bc9c-7ede-465b-8777-a0267a5a74dd.png)
 
 
 # Installation
