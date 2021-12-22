@@ -25,6 +25,9 @@
  *
  * Gdk DOCS:
  * http://transit.iut2.upmf-grenoble.fr/doc/libgtk-3-doc/gdk3/
+ *
+ * Easy popup msg:
+ *      system("/usr/bin/notify-send MessageSubject \"msg\"");
  */
 
 #include "wck-utils.h"
@@ -244,11 +247,10 @@ static void track_controled_window (WckUtils *win)
     if(get_active_window_number() == plugin_monitor) {
         //Check if window is maximized --> Show control
         //            if not maximized --> hide control
-        if(!wnck_window_is_maximized(win->activewindow)
-           || wnck_window_is_minimized(win->activewindow)){
+        if(wnck_window_is_maximized(win->activewindow)
+           || !wnck_window_is_minimized(win->activewindow)){
 //            on_control_window_changed(NULL, NULL, win->data); //Hide Buttons
-            system("/usr/bin/notify-send MessageSubject \"Prevent error genauuuuu da\"");
-        }else{
+//        }else{
             on_control_window_changed(win->controlwindow, previous_control, win->data);
         }
     }
