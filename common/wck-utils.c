@@ -20,6 +20,11 @@
  */
 
 #include "wck-utils.h"
+//#include <gtk-3.0/gdk/gdk.h>
+//#include <gtk-3.0/gdk/gdkmonitor.h>
+//#include <gtk-3.0/gdk/gdkwayland.h>
+//#include <gdk/gdk.h>
+//#include <gtk/gtk.h>
 
 /* Prototypes */
 static WnckWindow *get_root_window(WnckScreen *screen);
@@ -192,6 +197,40 @@ static void track_controled_window (WckUtils *win)
 
 
     //Mein neues feature
+
+    int monitor_number, monitor_screen_number, x, y;
+    GdkDisplay *display;
+    GdkScreen *screen;
+    GdkWindow *window;
+//    GdkMonitor *monitorfscreen;
+//    GdkMonitor *monitorfdisplay;
+    display = gdk_display_get_default();
+    screen = gdk_display_get_default_screen(display);
+    window = gdk_screen_get_active_window(screen);
+
+//    monitor_number = gdk_display_get_n_monitors(display);
+    monitor_screen_number = gdk_screen_get_n_monitors(screen);
+
+    GdkRectangle *rect;
+    gint activeWindowsAtMonitor = gdk_screen_get_monitor_at_window(screen, window);
+
+    gdk_screen_get_monitor_geometry(screen, activeWindowsAtMonitor, rect);
+
+    x = gdk_window_get_width(window);
+    y = gdk_window_get_height(window);
+
+//    if x < 0: x = 0
+//    if y < 0: y = 0
+
+//    monitorfscreen = ;
+//    monitorfdisplay =  gdk_display_get_monitor(display, monitor_number);
+
+
+
+
+
+
+
 //    GList *window_l;
 //
 //
@@ -216,21 +255,21 @@ static void track_controled_window (WckUtils *win)
     //activewindow != upper max window --> hide buttons
 //    WnckScreen *screencontrol;
 //    WnckScreen *screenold;
-    int screencontrol;
-    int screenold;
+//    int screencontrol;
+    int screenold = 0;
 //    wnck_screen_force_update(win->activescreen);
 //    screencontrol = wnck_screen_get_number(win->activescreen);
-    screencontrol = wnck_screen_get_number(wnck_window_get_screen(win->activewindow));
+//    screencontrol = wnck_screen_get_number(wnck_window_get_screen(win->activewindow));
 //    screencontrol = wnck_window_get_screen(win->activewindow);
 //    screencontrol = wnck_screen_get_default();
-    screenold = 0; //plugin screen
-
-    char command[100], msg[100];
+//    screenold = 0; //plugin screen
 //
+    char command[100], msg[100];
+
         strcpy(command,"/usr/bin/notify-send MessageSubject");
         strcpy(msg," \"number ");
         char str[12];
-        sprintf(str, "%d", screencontrol);
+        sprintf(str, "%d", activeWindowsAtMonitor);
         char str2[12];
         sprintf(str2, "%d", screenold);
         strcat(msg, str);
@@ -240,16 +279,18 @@ static void track_controled_window (WckUtils *win)
 
         system(command);
 
-//    if (screencontrol != screenold){
-//        system("/usr/bin/notify-send MessageSubject \"not same screen\"");
-//    }else{
-//        system("/usr/bin/notify-send MessageSubject \"same screen\"");
-//    }
-
-    if (win->activewindow != win->umaxwindow && win->only_maximized || screencontrol != screenold) {
-        on_control_window_changed(NULL, NULL, win->data); //Hide Buttons
+    if (activeWindowsAtMonitor != screenold){
+        system("/usr/bin/notify-send MessageSubject \"not same screen\"");
     }else{
-        on_control_window_changed(win->controlwindow, previous_control, win->data);
+        system("/usr/bin/notify-send MessageSubject \"same screen\"");
+    }
+
+    if(activeWindowsAtMonitor == screenold) {
+        if (win->activewindow != win->umaxwindow && win->only_maximized) {
+            on_control_window_changed(NULL, NULL, win->data); //Hide Buttons
+        } else {
+            on_control_window_changed(win->controlwindow, previous_control, win->data);
+        }
     }
 }
 
