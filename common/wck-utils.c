@@ -323,7 +323,7 @@ static void active_window_changed (WnckScreen *screen,
 // We ONLY need this for Compiz (Marco doesn't use viewports)
 static void on_viewports_changed (WnckScreen *screen, WckUtils *win)
 {
-    if(get_active_window_number() == win->plugin_monitor)
+//    if(get_active_window_number() == win->plugin_monitor)
         reload_wnck (win, win->only_maximized, win->plugin_monitor, win->data);
 }
 
@@ -333,7 +333,7 @@ static void active_workspace_changed (WnckScreen *screen,
                                       WnckWorkspace *previous,
                                       WckUtils *win)
 {
-    if(get_active_window_number() == win->plugin_monitor)
+//    if(get_active_window_number() == win->plugin_monitor)
         reload_wnck (win, win->only_maximized, win->plugin_monitor, win->data);
 }
 
