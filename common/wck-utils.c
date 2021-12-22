@@ -92,7 +92,7 @@ static void track_changed_max_state (WnckWindow *window,
             && !wnck_window_is_minimized(window)
             && wnck_window_is_maximized(window))
         {
-            if(get_active_window_number() == 0)
+            if(get_active_window_number() == win->plugin_monitor)
                 track_controled_window (win);
         }
     }
@@ -110,11 +110,11 @@ static void on_umaxed_window_state_changed (WnckWindow *window,
         || wnck_window_is_minimized(window)
         || changed_mask & (WNCK_WINDOW_STATE_ABOVE))
     {
-        if(get_active_window_number() == 0)
+        if(get_active_window_number() == win->plugin_monitor)
             track_controled_window (win);
     }
     else {
-        if(get_active_window_number() == 0)
+        if(get_active_window_number() == win->plugin_monitor)
             on_wck_state_changed(win->controlwindow, win->data);
     }
 }
@@ -134,7 +134,7 @@ static WnckWindow *get_upper_maximized (WckUtils *win)
             if (wnck_window_is_maximized(windows->data)
                 && !wnck_window_is_minimized(windows->data))
             {
-                if(get_active_window_number_from_xid(wnck_window_get_xid(windows->data)) == 0)
+                if(get_active_window_number_from_xid(wnck_window_get_xid(windows->data)) == win->plugin_monitor)
                     umaxedwindow = windows->data;
             }
         windows = windows->next;
@@ -206,7 +206,7 @@ static void track_controled_window (WckUtils *win)
 
     if (win->only_maximized)
     {
-        if (win->umaxwindow && (win->umaxwindow != previous_umax) && get_active_window_number() == 0)
+        if (win->umaxwindow && (win->umaxwindow != previous_umax) && get_active_window_number() == win->plugin_monitor)
         {
             /* track the new upper maximized window state */
             win->msh = g_signal_connect(G_OBJECT(win->umaxwindow),
@@ -242,9 +242,23 @@ static void track_controled_window (WckUtils *win)
     //Mein neues feature
 
     //Monitor number of plugin instance
-    int plugin_monitor = 0;
     //Check if active window is on same monitor as plugin instance
-    if(get_active_window_number() == plugin_monitor) {
+
+    char command[100], msg[100];
+//
+        strcpy(command,"/usr/bin/notify-send MessageSubject");
+        strcpy(msg," \"number ");
+        char str[12];
+        sprintf(str, "%d", get_active_window_number());
+        char str2[12];
+        sprintf(str2, "%d", win->plugin_monitor);
+        strcat(msg, str);
+        strcat(msg, str2);
+        strcat(msg," \" ");
+        strcat(command,msg);
+
+        system(command);
+    if(get_active_window_number() == win->plugin_monitor) {
         //Check if window is maximized --> Show control
         //            if not maximized --> hide control
         if(wnck_window_is_maximized(win->activewindow)
@@ -288,7 +302,7 @@ static void active_window_changed (WnckScreen *screen,
     gint activewindowmonitornumber = get_active_window_number();
     win->activewindow = wnck_screen_get_active_window(screen);
 
-    if (win->activewindow != previous && get_active_window_number() == 0)
+    if (win->activewindow != previous && get_active_window_number() == win->plugin_monitor)
     {
         wck_signal_handler_disconnect (G_OBJECT(previous), win->ash);
 
@@ -297,7 +311,7 @@ static void active_window_changed (WnckScreen *screen,
 
     if (win->activewindow
         && (win->activewindow != previous)
-        && (wnck_window_get_window_type (win->activewindow) != WNCK_WINDOW_DESKTOP)  && get_active_window_number() == 0)
+        && (wnck_window_get_window_type (win->activewindow) != WNCK_WINDOW_DESKTOP)  && get_active_window_number() == win->plugin_monitor)
     {
         /* Start tracking the new active window */
         win->ash = g_signal_connect(G_OBJECT (win->activewindow), "state-changed", G_CALLBACK (track_changed_max_state), win);
@@ -309,8 +323,8 @@ static void active_window_changed (WnckScreen *screen,
 // We ONLY need this for Compiz (Marco doesn't use viewports)
 static void on_viewports_changed (WnckScreen *screen, WckUtils *win)
 {
-    if(get_active_window_number() == 0)
-        reload_wnck (win, win->only_maximized, win->data);
+    if(get_active_window_number() == win->plugin_monitor)
+        reload_wnck (win, win->only_maximized, win->plugin_monitor, win->data);
 }
 
 
@@ -319,8 +333,8 @@ static void active_workspace_changed (WnckScreen *screen,
                                       WnckWorkspace *previous,
                                       WckUtils *win)
 {
-    if(get_active_window_number() == 0)
-        reload_wnck (win, win->only_maximized, win->data);
+    if(get_active_window_number() == win->plugin_monitor)
+        reload_wnck (win, win->only_maximized, win->plugin_monitor, win->data);
 }
 
 
@@ -333,7 +347,7 @@ void toggle_maximize (WnckWindow *window)
 }
 
 
-void reload_wnck (WckUtils *win, gboolean only_maximized, gpointer data)
+void reload_wnck (WckUtils *win, gboolean only_maximized, gint plugin_monitor, gpointer data)
 {
     /* disconnect all signal handlers */
     wck_signal_handler_disconnect (G_OBJECT(win->controlwindow), win->ash);
@@ -345,11 +359,11 @@ void reload_wnck (WckUtils *win, gboolean only_maximized, gpointer data)
     wck_signal_handler_disconnect (G_OBJECT(win->activescreen), win->svh);
     wck_signal_handler_disconnect (G_OBJECT(win->activescreen), win->swh);
 
-    init_wnck (win, only_maximized, data);
+    init_wnck (win, only_maximized, plugin_monitor, data);
 }
 
 
-void init_wnck (WckUtils *win, gboolean only_maximized, gpointer data)
+void init_wnck (WckUtils *win, gboolean only_maximized, gint plugin_monitor, gpointer data)
 {
     /* save data */
     win->data = data;
@@ -363,6 +377,7 @@ void init_wnck (WckUtils *win, gboolean only_maximized, gpointer data)
     win->umaxwindow = NULL;
     win->controlwindow = NULL;
     win->only_maximized = only_maximized;
+    win->plugin_monitor = plugin_monitor;
 
     /* Global window tracking */
     g_signal_connect(win->activescreen, "active-window-changed", G_CALLBACK (active_window_changed), win);

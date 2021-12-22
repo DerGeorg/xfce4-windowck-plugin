@@ -72,6 +72,7 @@ typedef struct {
     gboolean sync_wm_theme;         // [T/F] Try to use xfwm4 active theme if possible.
     gint inactive_text_alpha;       // Title inactive alpha
     gint inactive_text_shade;       // Title inactive shade
+    gint plugin_monitor;
 } WBPreferences;
 
 /* Definition for our button */

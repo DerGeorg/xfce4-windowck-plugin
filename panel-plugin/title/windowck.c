@@ -396,7 +396,7 @@ static void windowck_construct(XfcePanelPlugin *plugin)
 
     /* start tracking title text */
     wckp->win = g_slice_new0 (WckUtils);
-    init_wnck(wckp->win, wckp->prefs->only_maximized, wckp);
+    init_wnck(wckp->win, wckp->prefs->only_maximized, 1, wckp); //TODO settings connect new GtkSpinButton plugin_monitor instead of 1
 
     /* start tracking title size */
     init_title(wckp);

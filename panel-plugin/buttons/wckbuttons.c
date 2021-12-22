@@ -81,6 +81,7 @@ wckbuttons_save (XfcePanelPlugin *plugin,
         xfce_rc_write_bool_entry(rc, "only_maximized", wb->prefs->only_maximized);
         xfce_rc_write_bool_entry(rc, "show_on_desktop", wb->prefs->show_on_desktop);
         xfce_rc_write_bool_entry(rc, "sync_wm_theme", wb->prefs->sync_wm_theme);
+        xfce_rc_write_int_entry(rc, "plugin_monitor", wb->prefs->plugin_monitor);
         if (wb->prefs->button_layout)
             xfce_rc_write_entry (rc, "button_layout", wb->prefs->button_layout);
 
@@ -95,7 +96,7 @@ wckbuttons_save (XfcePanelPlugin *plugin,
     }
 }
 
-
+//actual
 static void
 wckbuttons_read (WBPlugin *wb)
 {
@@ -123,6 +124,7 @@ wckbuttons_read (WBPlugin *wb)
             wb->prefs->only_maximized = xfce_rc_read_bool_entry(rc, "only_maximized", DEFAULT_ONLY_MAXIMIZED);
             wb->prefs->show_on_desktop = xfce_rc_read_bool_entry(rc, "show_on_desktop", DEFAULT_SHOW_ON_DESKTOP);
             wb->prefs->sync_wm_theme = xfce_rc_read_bool_entry(rc, "sync_wm_theme", DEFAULT_SYNC_WM_THEME);
+            wb->prefs->plugin_monitor = xfce_rc_read_int_entry (rc, "plugin_monitor", 0);
             button_layout = xfce_rc_read_entry (rc, "button_layout", DEFAULT_BUTTON_LAYOUT);
             wb->prefs->button_layout = button_layout_filter (button_layout, DEFAULT_BUTTON_LAYOUT);
             theme = xfce_rc_read_entry (rc, "theme", DEFAULT_THEME);
@@ -503,7 +505,7 @@ static void on_refresh_item_activated (GtkMenuItem *refresh, WBPlugin *wb)
 {
     wckbuttons_read (wb);
     init_theme(wb);
-    reload_wnck (wb->win, wb->prefs->only_maximized, wb);
+    reload_wnck (wb->win, wb->prefs->only_maximized, 1, wb); //TODO settings connect new GtkSpinButton plugin_monitor instead of 1
 }
 
 
@@ -555,7 +557,7 @@ wckbuttons_construct (XfcePanelPlugin *plugin)
 
     /* start tracking windows */
     wb->win = g_slice_new0 (WckUtils);
-    init_wnck(wb->win, wb->prefs->only_maximized, wb);
+    init_wnck(wb->win, wb->prefs->only_maximized, wb->prefs->plugin_monitor, wb);
 
     /* get theme */
     init_theme(wb);

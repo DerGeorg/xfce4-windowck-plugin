@@ -34,7 +34,7 @@ G_BEGIN_DECLS
 typedef struct {
     WnckScreen *activescreen;          // Active screen
     WnckWorkspace *activeworkspace;    // Active workspace
-    WnckWindow *controlwindow;          // Controled window according to only_maximized option
+    WnckWindow *controlwindow;          // Controlled window according to only_maximized option
     WnckWindow *activewindow;          // Active window
     WnckWindow *umaxwindow;            // Upper maximized window
 
@@ -48,13 +48,15 @@ typedef struct {
 
     gboolean only_maximized;           // [T/F] Only track maximized windows
 
+    gint plugin_monitor;
+
     gpointer data;
 } WckUtils;
 
-void init_wnck (WckUtils *win, gboolean only_maximized, gpointer data);
+void init_wnck (WckUtils *win, gboolean only_maximized, gint plugin_monitor, gpointer data);
 void on_wck_state_changed (WnckWindow *controlwindow, gpointer data);
 void on_control_window_changed(WnckWindow *controlwindow, WnckWindow *previous, gpointer data);
-void reload_wnck (WckUtils *win, gboolean only_maximized, gpointer data);
+void reload_wnck (WckUtils *win, gboolean only_maximized, gint plugin_monitor, gpointer data);
 void toggle_maximize (WnckWindow *window);
 gboolean wck_signal_handler_disconnect (GObject *object, gulong handler);
 
