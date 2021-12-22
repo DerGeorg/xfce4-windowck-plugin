@@ -80,6 +80,8 @@ typedef struct {
     gint inactive_text_shade;       // Title inactive shade
     gchar *active_text_color;       // active text color
     gchar *inactive_text_color;     // inactive text color
+
+    gint plugin_monitor;
 } WCKPreferences;
 
 /* plugin structure */

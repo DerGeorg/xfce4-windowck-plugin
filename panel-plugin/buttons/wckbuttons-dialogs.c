@@ -256,7 +256,6 @@ static void on_sync_wm_theme_toggled(GtkToggleButton *sync_wm_theme, WBPlugin *w
 
 static void on_plugin_monitor_spin_changed(GtkSpinButton *plugin_monitor, WBPlugin *wb){
     wb->prefs->plugin_monitor = gtk_spin_button_get_value(plugin_monitor);
-//    resize_title(wb);
 }
 
 

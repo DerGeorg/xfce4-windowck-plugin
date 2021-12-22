@@ -265,6 +265,9 @@ static void on_title_padding_changed(GtkSpinButton *title_padding, WindowckPlugi
     gtk_box_set_spacing (GTK_BOX(wckp->hvbox), wckp->prefs->title_padding);
 }
 
+static void on_plugin_monitor_spin_changed(GtkSpinButton *plugin_monitor, WindowckPlugin *wckp){
+    wckp->prefs->plugin_monitor = gtk_spin_button_get_value(plugin_monitor);
+}
 
 static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buffer, gsize length)
 {
@@ -277,7 +280,8 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
     GtkToggleButton *show_on_desktop, *full_name, *two_lines;
     GtkToggleButton *show_app_icon, *icon_on_right, *show_window_menu;
     GtkFontButton *title_font, *subtitle_font;
-    GtkWidget *width_unit, *subtitle_font_label;
+    GtkWidget *width_unit, *subtitle_font_label, *plugin_monitor_desc;;
+    GtkSpinButton *plugin_monitor_spin;
 
     wckp->prefs->builder = gtk_builder_new();
 
@@ -297,6 +301,20 @@ static GtkWidget * build_properties_area(WindowckPlugin *wckp, const gchar *buff
             }
             else {
                 DBG("No widget with the name \"only_maximized\" found");
+            }
+
+            plugin_monitor_spin = GTK_SPIN_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "plugin_monitor"));
+            plugin_monitor_desc = GTK_WIDGET(gtk_builder_get_object(wckp->prefs->builder, "plugin_monitor_desc"));
+
+            if (G_LIKELY (plugin_monitor_spin != NULL))
+            {
+                gtk_spin_button_set_range(plugin_monitor_spin, 0, 100);
+                gtk_spin_button_set_increments(plugin_monitor_spin, 1, 1);
+                gtk_spin_button_set_value(plugin_monitor_spin, wckp->prefs->plugin_monitor);
+                g_signal_connect(plugin_monitor_spin, "value-changed", G_CALLBACK(on_plugin_monitor_spin_changed), wckp);
+            }
+            else {
+                DBG("No widget with the name \"plugin_monitor\" found");
             }
 
             show_on_desktop = GTK_TOGGLE_BUTTON(gtk_builder_get_object(wckp->prefs->builder, "show_on_desktop"));

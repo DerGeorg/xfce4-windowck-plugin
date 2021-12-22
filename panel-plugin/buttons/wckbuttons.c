@@ -505,7 +505,7 @@ static void on_refresh_item_activated (GtkMenuItem *refresh, WBPlugin *wb)
 {
     wckbuttons_read (wb);
     init_theme(wb);
-    reload_wnck (wb->win, wb->prefs->only_maximized, 1, wb); //TODO settings connect new GtkSpinButton plugin_monitor instead of 1
+    reload_wnck (wb->win, wb->prefs->only_maximized, wb->prefs->plugin_monitor, wb);
 }
 
 

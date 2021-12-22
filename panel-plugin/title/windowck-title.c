@@ -36,7 +36,7 @@ void reload_wnck_title (WindowckPlugin *wckp)
     wck_signal_handler_disconnect (G_OBJECT(wckp->win->controlwindow), wckp->cnh);
     wck_signal_handler_disconnect (G_OBJECT(wckp->win->controlwindow), wckp->cih);
 
-    reload_wnck (wckp->win, wckp->prefs->only_maximized, 1, wckp); //TODO settings connect new GtkSpinButton plugin_monitor instead of 1
+    reload_wnck (wckp->win, wckp->prefs->only_maximized, wckp->prefs->plugin_monitor, wckp);
 }
 
 
