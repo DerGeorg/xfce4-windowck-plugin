@@ -110,11 +110,11 @@ static void on_umaxed_window_state_changed (WnckWindow *window,
         || wnck_window_is_minimized(window)
         || changed_mask & (WNCK_WINDOW_STATE_ABOVE))
     {
-        if(get_active_window_number() == win->plugin_monitor)
+//        if(get_active_window_number() == win->plugin_monitor)
             track_controled_window (win);
     }
     else {
-        if(get_active_window_number() == win->plugin_monitor)
+//        if(get_active_window_number() == win->plugin_monitor)
             on_wck_state_changed(win->controlwindow, win->data);
     }
 }
@@ -244,20 +244,6 @@ static void track_controled_window (WckUtils *win)
     //Monitor number of plugin instance
     //Check if active window is on same monitor as plugin instance
 
-    char command[100], msg[100];
-//
-        strcpy(command,"/usr/bin/notify-send MessageSubject");
-        strcpy(msg," \"number ");
-        char str[12];
-        sprintf(str, "%d", get_active_window_number());
-        char str2[12];
-        sprintf(str2, "%d", win->plugin_monitor);
-        strcat(msg, str);
-        strcat(msg, str2);
-        strcat(msg," \" ");
-        strcat(command,msg);
-
-        system(command);
     if(get_active_window_number() == win->plugin_monitor) {
         //Check if window is maximized --> Show control
         //            if not maximized --> hide control
@@ -302,16 +288,20 @@ static void active_window_changed (WnckScreen *screen,
     gint activewindowmonitornumber = get_active_window_number();
     win->activewindow = wnck_screen_get_active_window(screen);
 
-    if (win->activewindow != previous && get_active_window_number() == win->plugin_monitor)
+//    if (win->activewindow != previous && get_active_window_number() == win->plugin_monitor)
+    if (win->activewindow != previous)
     {
         wck_signal_handler_disconnect (G_OBJECT(previous), win->ash);
 
         track_controled_window (win);
     }
 
+//    if (win->activewindow
+//        && (win->activewindow != previous)
+//        && (wnck_window_get_window_type (win->activewindow) != WNCK_WINDOW_DESKTOP)  && get_active_window_number() == win->plugin_monitor)
     if (win->activewindow
         && (win->activewindow != previous)
-        && (wnck_window_get_window_type (win->activewindow) != WNCK_WINDOW_DESKTOP)  && get_active_window_number() == win->plugin_monitor)
+        && (wnck_window_get_window_type (win->activewindow) != WNCK_WINDOW_DESKTOP))
     {
         /* Start tracking the new active window */
         win->ash = g_signal_connect(G_OBJECT (win->activewindow), "state-changed", G_CALLBACK (track_changed_max_state), win);
