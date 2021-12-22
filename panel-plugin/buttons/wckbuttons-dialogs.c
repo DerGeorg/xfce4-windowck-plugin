@@ -46,14 +46,14 @@ enum
 static void on_only_maximized_toggled(GtkRadioButton *only_maximized, WBPlugin *wb)
 {
     wb->prefs->only_maximized = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(only_maximized));
-    reload_wnck (wb->win, wb->prefs->only_maximized, wb);
+    reload_wnck (wb->win, wb->prefs->only_maximized, wb->prefs->plugin_monitor, wb);
 }
 
 
 static void on_show_on_desktop_toggled(GtkToggleButton *show_on_desktop, WBPlugin *wb)
 {
     wb->prefs->show_on_desktop = gtk_toggle_button_get_active(show_on_desktop);
-    reload_wnck (wb->win, wb->prefs->only_maximized, wb);
+    reload_wnck (wb->win, wb->prefs->only_maximized, wb->prefs->plugin_monitor, wb);
 }
 
 
@@ -254,16 +254,21 @@ static void on_sync_wm_theme_toggled(GtkToggleButton *sync_wm_theme, WBPlugin *w
     }
 }
 
+static void on_plugin_monitor_spin_changed(GtkSpinButton *plugin_monitor, WBPlugin *wb){
+    wb->prefs->plugin_monitor = gtk_spin_button_get_value(plugin_monitor);
+}
+
 
 static GtkWidget * build_properties_area(WBPlugin *wb, const gchar *buffer, gsize length) {
     GError *error = NULL;
     GObject *area = NULL;
     GtkRadioButton *only_maximized, *active_window;
     GtkToggleButton *show_on_desktop, *sync_wm_theme;
+    GtkSpinButton *plugin_monitor_spin;
     GtkTreeSelection *selection;
     GtkCellRenderer *renderer;
     GtkListStore *list_store;
-    GtkWidget *theme_name_treeview;
+    GtkWidget *theme_name_treeview, *plugin_monitor_desc;
     GtkEntry *button_layout;
 
     wb->prefs->builder = gtk_builder_new();
@@ -275,6 +280,20 @@ static GtkWidget * build_properties_area(WBPlugin *wb, const gchar *buffer, gsiz
         {
             only_maximized = GTK_RADIO_BUTTON(gtk_builder_get_object(wb->prefs->builder, "only_maximized"));
             active_window = GTK_RADIO_BUTTON(gtk_builder_get_object(wb->prefs->builder, "active_window"));
+
+            plugin_monitor_spin = GTK_SPIN_BUTTON(gtk_builder_get_object(wb->prefs->builder, "plugin_monitor"));
+            plugin_monitor_desc = GTK_WIDGET(gtk_builder_get_object(wb->prefs->builder, "plugin_monitor_desc"));
+
+            if (G_LIKELY (plugin_monitor_spin != NULL))
+            {
+                gtk_spin_button_set_range(plugin_monitor_spin, 0, 100);
+                gtk_spin_button_set_increments(plugin_monitor_spin, 1, 1);
+                gtk_spin_button_set_value(plugin_monitor_spin, wb->prefs->plugin_monitor);
+                g_signal_connect(plugin_monitor_spin, "value-changed", G_CALLBACK(on_plugin_monitor_spin_changed), wb);
+            }
+            else {
+                DBG("No widget with the name \"plugin_monitor\" found");
+            }
 
             if (G_LIKELY (only_maximized != NULL))
             {

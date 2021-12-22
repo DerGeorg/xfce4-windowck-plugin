@@ -92,6 +92,7 @@ void windowck_save(XfcePanelPlugin *plugin, WindowckPlugin *wckp)
         xfce_rc_write_int_entry(rc, "size_mode", wckp->prefs->size_mode);
         xfce_rc_write_int_entry(rc, "title_size", wckp->prefs->title_size);
         xfce_rc_write_bool_entry(rc, "sync_wm_font", wckp->prefs->sync_wm_font);
+        xfce_rc_write_int_entry(rc, "plugin_monitor", wckp->prefs->plugin_monitor);
         if (wckp->prefs->title_font)
             xfce_rc_write_entry(rc, "title_font", wckp->prefs->title_font);
 
@@ -144,6 +145,7 @@ static void windowck_read(WindowckPlugin *wckp)
             wckp->prefs->size_mode = xfce_rc_read_int_entry (rc, "size_mode", DEFAULT_SIZE_MODE);
             wckp->prefs->title_size = xfce_rc_read_int_entry(rc, "title_size", DEFAULT_TITLE_SIZE);
             wckp->prefs->sync_wm_font = xfce_rc_read_bool_entry(rc, "sync_wm_font", DEFAULT_SYNC_WM_FONT);
+            wckp->prefs->plugin_monitor = xfce_rc_read_int_entry (rc, "plugin_monitor", 0);
             title_font = xfce_rc_read_entry(rc, "title_font", DEFAULT_TITLE_FONT);
             wckp->prefs->title_font = g_strdup(title_font);
             subtitle_font = xfce_rc_read_entry(rc, "subtitle_font", DEFAULT_SUBTITLE_FONT);
@@ -396,7 +398,7 @@ static void windowck_construct(XfcePanelPlugin *plugin)
 
     /* start tracking title text */
     wckp->win = g_slice_new0 (WckUtils);
-    init_wnck(wckp->win, wckp->prefs->only_maximized, wckp);
+    init_wnck(wckp->win, wckp->prefs->only_maximized, wckp->prefs->plugin_monitor, wckp);
 
     /* start tracking title size */
     init_title(wckp);
